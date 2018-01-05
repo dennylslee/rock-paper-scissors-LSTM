@@ -71,15 +71,15 @@ def create_dataset(dataset, look_back):
 
 #------------------------------------------config section ------------------------------------------------------------------
 play_AI = True				# player 2 is LSTM
-onlineMode = True 			# emulate online self-learning mode - use training phase as test reference; for batch size to 1
-stackLSTM = True			# stack up multple layers of LSTM
+onlineMode = False 			# emulate online self-learning mode - use training phase as test reference; for batch size to 1
+stackLSTM = False			# stack up multple layers of LSTM
 output_dim = 3				# fix this at 3 for RPS use case
 input_dim = 3				# fix this at 3 for RPS use case
-timestep_length = 100		# play with this for number of hidden nodes in LSTM
-training_pct = 0.7			# percentage of overall dataset used for training
-dropout = 0.7				# dropout rate (1 means full drop out)
+timestep_length = 200		# play with this for number of hidden nodes in LSTM
+training_pct = 0.3			# percentage of overall dataset used for training
+dropout = 0.3				# dropout rate (1 means full drop out)
 epochs = 25					# num of epochs (one epoch is one sweep of full training set)
-hiddenUnits = 10			# size of the hidden units in each cell
+hiddenUnits = 50			# size of the hidden units in each cell
 validation_split = 0.2		# percentage split in model.fit for built in validation during training phase
 np.random.seed(7)			# fix a random seed
 # num of training samples submitted for one fwd/bwd pass before weights are updated
@@ -92,7 +92,7 @@ now = time.strftime("%g%m%d%H%M%S")	# date and time code for adding sub director
 #raw_rps_seq = load_doc("player1_rps_PRNG.txt")					# long psuedo random generation w distribution
 #raw_rps_seq = load_doc("player1_rps_RandRepeat.txt")			# random and deterministic repeated sequence 
 #raw_rps_seq = load_doc("player1_rps_LFSR.txt")					# linear feedback shift register as PRNG
-raw_rps_seq = load_doc("player1_rps_RANDU.txt")					# RANDU algorithm as PRNG
+raw_rps_seq = load_doc("player1_rps_RANDU.txt")				# RANDU algorithm as PRNG
 #raw_rps_seq = load_doc("player1_rps_p1_RawRoshambo.txt")		# player 1 dataset from Roshambo human dataset
 #raw_rps_seq = load_doc("player1_rps_p2_RawRoshambo.txt")		# player 2 dataset from Roshambo human dataset
 

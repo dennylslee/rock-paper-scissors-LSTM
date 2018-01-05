@@ -14,7 +14,7 @@ The LSTM is built on Keras framework. For some of the best LSTM tutorials I have
 
 ## RPS sequence generation
 
-There are six variants of input sequences available for testing:
+There are six variants of input sequences available for choosing:
 
 ```python
 # ---------------------------------------load player 1 play sequence-----------------------------------
@@ -95,7 +95,7 @@ Since a sophisticated PRNG proves to hard to predict, a weak form of PRNG is use
 
 ### RANDU as sequence generator
 
-Another notoriously weak PRNG is the RANDU algorithm.  The reference to the basics can be found [here](https://en.wikipedia.org/wiki/RANDU)
+Another notoriously weak PRNG is the RANDU algorithm.  The reference to the basics can be found [here](https://en.wikipedia.org/wiki/RANDU).
 
 ### Human-generated sequences
 
@@ -107,8 +107,9 @@ There are various online and app games for human to interact with an algorithmic
 The main purpose of the project is to assess the win-ability performance of using LSTM as player 2 against a randomly generated player 1 sequence. For testing purpose player 2 can also be assigned as a random player.  The switch "play_AI" controls if player2 is LSTM or random. 
 
 Other main control parameters of the LSTM are below. Note that:
-1. online mode switches the performance to the training phase and treat it like a continous self-learning sequence (i.e. a form of perpetual model fitting
-2 stackLSTM enables an extra layers in the LSTM.  It turns out that this has little effects on the results given the sequence pattern has no hierarchical structure. 
+1. online mode switches the performance to the training phase and treat it like a continous self-learning sequence (i.e. a form of perpetual model fitting.
+2.
+ stackLSTM enables an extra layers in the LSTM.  It turns out that this has little effects on the results given the sequence pattern has no hierarchical structure. 
 
 
 ```python
@@ -154,12 +155,92 @@ model.fit(
 	callbacks = [tbCallBack])
 ```
 
-# Main tuning notes
+## LSTM tuning
 
-1. Need sufficient training samples
+1. Need sufficient training samples.
 2. timesteps sequence size is immportant.  For repeating sequence, a longer timesteps size provide a longer memory window but for random sequence, a long timesteps tends to cause overfitting. 
-3. dropout is useful in countering the tendency to overfit
+3. dropout is useful in countering the tendency to overfit.
 4. number of epochs does not have much effects in this project since it seems to reach the optimal loss point pretty fast. 
 5. hidden units is the vector size of the cell and hidden state of the LSTM architecture. The larger it is the more information carrying ability of the LSTM but it can also cause overfitting. 
 
-# Performance assessment 
+# Perforamnce assessment 
+
+The measurment of the LSTM AI agent is measured by the culminated win, tie, loss rate. Note that the final output stage of the LSTM is based on softmax which is effectively a prediction probability value of each move. An "argmax" function is used to pick out the highest likelihood of the next move.  (side note: I tried using softsign as suggested by some but has not effect to my result)
+
+* Green line: win rate
+* Black line: tie rate
+* Red line: loss rate
+
+## Playing against PRNG
+
+Using the guassian PRNG as sequence generator, the LSTM can learn to beat player 2 in the long run as shown below.  However, it was not able to detect any sequence pattern.  It seems to only learn that probablisitically, there is a higher occurance of certain move type and it simply puts out counter move all the time.  I cannot tune the LSTM makes it perform any better than the steady state of ~38-40% win rate. 
+
+If the original sequence bell curve distribution is flatten to resemble uniform distribution. The win-tie-loss rate goes to the random equalibrium level of 33% each.
+
+PRNG generator using guassian distribution with sigma = 2.
+![result 1](https://github.com/dennylslee/rock-paper-scissors-LSTM/PRNG-result-1.png)
+
+PRNG generator using guassian distribution with sigma = 2.3.  
+![result 2](https://github.com/dennylslee/rock-paper-scissors-LSTM/PRNG-result-2.png)
+
+## Playing against Random Repeat
+
+LSTM clearly demonstrates its ability to learn the long sequence and generate counter-moves consistently (with steady state win rate at ~70%).  
+
+![result 3](https://github.com/dennylslee/rock-paper-scissors-LSTM/RandRpeat-result-1.png)
+
+The last 20 moves are captured to illustrate the move sequence of the LSTM:
+
+```
+Last 20 moves of player 1 versus player 2
+0 = rock, 1 = paper, 2 = sciessors
+player 1: [1, 2, 1, 2, 1, 0, 0, 2, 2, 1, 0, 2, 1, 0, 2, 1, 2, 1, 1]
+player 2: [2, 1, 2, 2, 2, 1, 1, 0, 0, 2, 0, 0, 2, 1, 1, 2, 0, 2, 1]
+```
+
+The dropout value has to be lowered to achieve better result given the tuning parameters set.
+```python
+timestep_length = 10		# play with this for number of hidden nodes in LSTM
+training_pct = 0.2			# percentage of overall dataset used for training
+dropout = 0.2				# dropout rate (1 means full drop out)
+epochs = 25					# num of epochs (one epoch is one sweep of full training set)
+hiddenUnits = 10			# size of the hidden units in each cell
+```
+
+## Playing against 12bits LFSR
+
+The LFSR is a weak PRNG and rps is generated based on binning the generated random number. The LSTM win rate is 50% while lossing and tie-ing 33%:
+
+![result 4](https://github.com/dennylslee/rock-paper-scissors-LSTM/LFSR-result-1.png)
+
+The last 20 moves are captured to illustrate the move sequence of the LSTM:
+
+```
+Last 20 moves of player 1 versus player 2
+0 = rock, 1 = paper, 2 = sciessors
+player 1: [2, 1, 0, 0, 2, 1, 2, 1, 2, 1, 2, 2, 0, 1, 2, 1, 2, 1, 2]
+player 2: [0, 2, 0, 1, 1, 2, 0, 2, 0, 2, 0, 2, 2, 1, 0, 2, 0, 2, 0]
+```
+## Playing against RANDU
+
+Though RANDU is itself a weak PRNG, the random number generated looks to be uniformly distributed and it proves to be tricky for the LSTM to learn. Some careful tuning of the LSTM parameters allow some consistent but only marginally better win rate in steady state. 
+
+![result 5](https://github.com/dennylslee/rock-paper-scissors-LSTM/RANDU-result-2.png)
+
+The main parameters:
+
+```python
+timestep_length = 100		# play with this for number of hidden nodes in LSTM
+training_pct = 0.3			# percentage of overall dataset used for training
+dropout = 0.3				# dropout rate (1 means full drop out)
+epochs = 25					# num of epochs (one epoch is one sweep of full training set)
+hiddenUnits = 50			# size of the hidden units in each cell
+
+```
+
+Interestingly, increaing the number of timesteps (to 200) or lowering it results in worse performance of win rate at 33%. The theory is that too many timesteps causes overfitting, which we would need to compensate with more dropout.  Too little timesteps constrains the memory time window for the LSTM to learn the sequence pattern.  More optimization can be achieved here. 
+
+# Other things to try in the future:
+
+* turning on the online mode and learn from a longer sequence of RANDU to see if we can improve the result (since using longer timestep seems to have better result)
+* relationship between timestep_length, dropout, and hiddenstate can be more finely tuned to potentially get better results while minimizing overfitting
