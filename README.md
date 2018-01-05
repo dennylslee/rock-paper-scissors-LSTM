@@ -172,19 +172,19 @@ The measurment of the LSTM AI agent is measured by the culminated win, tie, loss
 
 ## Playing against PRNG
 
-Using the guassian PRNG as sequence generator, the LSTM can learn to beat player 2 in the long run as shown below.  However, it was not able to detect any sequence pattern.  It seems to only learn that probablisitically, there is a higher occurance of certain move type and it simply puts out counter move all the time.  I cannot tune the LSTM makes it perform any better than the steady state of ~38-40% win rate. 
-
-If the original sequence bell curve distribution is flatten to resemble uniform distribution. The win-tie-loss rate goes to the random equalibrium level of 33% each.
+Using the Guassian PRNG as sequence generator, the LSTM can learn to beat player 2 in the long run as shown below.  However, it was not able to detect any sequence pattern.  It seems to only learn that probabilistically there is a higher occurances of certain move type; and it simply puts out the same counter move all the time.  I cannot tune the LSTM to make it perform any better than the steady state of ~38-40% win rate (i.e. there is no learn-able sequence; at least not with the small size data set and the relative small LSTM RNN in this exercise). 
 
 PRNG generator using guassian distribution with sigma = 2.
 ![result 1](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/PRNG-result-1.png)
+
+If the original sequence bell curve distribution is flatten to resemble uniform distribution. The win-tie-loss rate goes to the random equalibrium level of 33% each. In this case, the LSTM AI is no better than random. 
 
 PRNG generator using guassian distribution with sigma = 2.3.  
 ![result 2](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/PRNG-result-2.png)
 
 ## Playing against Random Repeat
 
-LSTM clearly demonstrates its ability to learn the long sequence and generate counter-moves consistently (with steady state win rate at ~70%).  
+LSTM clearly demonstrates its ability to learn the long sequence and generate counter-moves consistently (with steady state win rate at ~70%) in this case.  This is because player 1 is a deterministic sequence of fixed length and LSTM has no problem learning it. Increasing the LSTM timestep and hidden state size can probably beat out player 1 nearly 100%. 
 
 ![result 3](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/RandRepeat-result-1.png)
 
