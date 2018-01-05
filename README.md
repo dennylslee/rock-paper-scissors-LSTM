@@ -108,8 +108,7 @@ The main purpose of the project is to assess the win-ability performance of usin
 
 Other main control parameters of the LSTM are below. Note that:
 1. online mode switches the performance to the training phase and treat it like a continous self-learning sequence (i.e. a form of perpetual model fitting.
-2.
- stackLSTM enables an extra layers in the LSTM.  It turns out that this has little effects on the results given the sequence pattern has no hierarchical structure. 
+2. stackLSTM enables an extra layers in the LSTM.  It turns out that this has little effects on the results given the sequence pattern has no hierarchical structure. 
 
 
 ```python
@@ -187,7 +186,7 @@ PRNG generator using guassian distribution with sigma = 2.3.
 
 LSTM clearly demonstrates its ability to learn the long sequence and generate counter-moves consistently (with steady state win rate at ~70%).  
 
-![result 3](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/RandRpeat-result-1.png)
+![result 3](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/RandRepeat-result-1.png)
 
 The last 20 moves are captured to illustrate the move sequence of the LSTM:
 
