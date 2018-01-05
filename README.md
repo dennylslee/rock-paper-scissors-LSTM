@@ -178,16 +178,16 @@ Using the guassian PRNG as sequence generator, the LSTM can learn to beat player
 If the original sequence bell curve distribution is flatten to resemble uniform distribution. The win-tie-loss rate goes to the random equalibrium level of 33% each.
 
 PRNG generator using guassian distribution with sigma = 2.
-![result 1](https://github.com/dennylslee/rock-paper-scissors-LSTM/PRNG-result-1.png)
+![result 1](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/PRNG-result-1.png)
 
 PRNG generator using guassian distribution with sigma = 2.3.  
-![result 2](https://github.com/dennylslee/rock-paper-scissors-LSTM/PRNG-result-2.png)
+![result 2](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/PRNG-result-2.png)
 
 ## Playing against Random Repeat
 
 LSTM clearly demonstrates its ability to learn the long sequence and generate counter-moves consistently (with steady state win rate at ~70%).  
 
-![result 3](https://github.com/dennylslee/rock-paper-scissors-LSTM/RandRpeat-result-1.png)
+![result 3](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/RandRpeat-result-1.png)
 
 The last 20 moves are captured to illustrate the move sequence of the LSTM:
 
@@ -211,7 +211,7 @@ hiddenUnits = 10			# size of the hidden units in each cell
 
 The LFSR is a weak PRNG and rps is generated based on binning the generated random number. The LSTM win rate is 50% while lossing and tie-ing 33%:
 
-![result 4](https://github.com/dennylslee/rock-paper-scissors-LSTM/LFSR-result-1.png)
+![result 4](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/LFSR-result-1.png)
 
 The last 20 moves are captured to illustrate the move sequence of the LSTM:
 
@@ -225,7 +225,7 @@ player 2: [0, 2, 0, 1, 1, 2, 0, 2, 0, 2, 0, 2, 2, 1, 0, 2, 0, 2, 0]
 
 Though RANDU is itself a weak PRNG, the random number generated looks to be uniformly distributed and it proves to be tricky for the LSTM to learn. Some careful tuning of the LSTM parameters allow some consistent but only marginally better win rate in steady state. 
 
-![result 5](https://github.com/dennylslee/rock-paper-scissors-LSTM/RANDU-result-2.png)
+![result 5](https://github.com/dennylslee/rock-paper-scissors-LSTM/blob/master/RANDU-result-2.png)
 
 The main parameters:
 
@@ -239,6 +239,12 @@ hiddenUnits = 50			# size of the hidden units in each cell
 ```
 
 Interestingly, increaing the number of timesteps (to 200) or lowering it results in worse performance of win rate at 33%. The theory is that too many timesteps causes overfitting, which we would need to compensate with more dropout.  Too little timesteps constrains the memory time window for the LSTM to learn the sequence pattern.  More optimization can be achieved here. 
+```
+Last 20 moves of player 1 versus player 2
+0 = rock, 1 = paper, 2 = sciessors
+player 1: [0, 0, 1, 0, 2, 2, 0, 2, 1, 0, 2, 1, 2, 1, 0, 1, 2, 2, 2]
+player 2: [1, 0, 0, 0, 0, 2, 2, 0, 2, 0, 0, 2, 1, 1, 1, 0, 0, 1, 2]
+```
 
 # Other things to try in the future:
 
